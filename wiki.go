@@ -5,6 +5,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"regexp"
+	"log"
+	"os"
+	"fmt"
 )
 
 
@@ -102,6 +105,18 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
 
 
 func main() {
+
+	// Create log.txt file
+	logFile, err := os.Create("log.txt")
+	if err != nil {
+		fmt.Println("creating logfile error: ", err)
+	}
+
+
+	logger := log.New(logFile, "testing ", log.Ldate | log.Ltime)
+	logger.Print("first line")
+
+
 	http.HandleFunc("/view/", makeHandler(viewHandler))
 	http.HandleFunc("/edit/", makeHandler(editHandler))
 	http.HandleFunc("/save/", makeHandler(saveHandler))
